@@ -6,9 +6,27 @@ export default function MetricsPage() {
       <section className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
         <h1 className="text-3xl font-bold tracking-tight text-white">Model Metrics</h1>
         <p className="mt-2 text-slate-300">
-          Comparison of classification quality across baseline and boosted models used in the
-          fraud detection pipeline.
+          Compare how each model separates fraud from non-fraud transactions, and learn what each
+          metric means in plain language.
         </p>
+      </section>
+
+      <section className="mt-6 grid gap-4 md:grid-cols-2">
+        <article className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+          <h2 className="text-lg font-semibold text-white">What is ROC AUC?</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            ROC AUC measures how well a model ranks risky transactions above safe ones across all
+            possible thresholds. Closer to 1.0 means better overall separation.
+          </p>
+        </article>
+        <article className="rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
+          <h2 className="text-lg font-semibold text-white">What is PR AUC?</h2>
+          <p className="mt-2 text-sm text-slate-300">
+            PR AUC focuses on fraud cases specifically, balancing precision (how many flagged are
+            truly fraud) and recall (how many frauds are caught). This is especially important when
+            fraud is rare.
+          </p>
+        </article>
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">

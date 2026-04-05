@@ -21,14 +21,19 @@ export const MODEL_METRICS = [
   },
 ] as const;
 
-export const PRODUCT_OPTIONS = ["W", "H", "C", "S", "R"] as const;
-
 export const CARD_NETWORK_OPTIONS = [
   "visa",
   "mastercard",
   "american express",
   "discover",
   "other",
+] as const;
+
+export const CARD_TYPE_OPTIONS = [
+  "debit",
+  "credit",
+  "debit or credit",
+  "charge card",
 ] as const;
 
 export const RISK_BANDS: { label: RiskBandLabel; description: string }[] = [

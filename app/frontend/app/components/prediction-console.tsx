@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { CARD_NETWORK_OPTIONS, PRODUCT_OPTIONS } from "../lib/dashboard-data";
+import { CARD_NETWORK_OPTIONS, CARD_TYPE_OPTIONS } from "../lib/dashboard-data";
 
 type PredictionResponse = {
   fraud_probability: number;
@@ -11,14 +11,14 @@ type PredictionResponse = {
 
 type TransactionFormState = {
   TransactionAmt: string;
-  ProductCD: string;
   card4: string;
+  card6: string;
 };
 
 const initialFormState: TransactionFormState = {
   TransactionAmt: "",
-  ProductCD: PRODUCT_OPTIONS[0],
   card4: CARD_NETWORK_OPTIONS[0],
+  card6: CARD_TYPE_OPTIONS[2],
 };
 
 function formatAsPercent(value: number): string {
@@ -57,8 +57,6 @@ export function PredictionConsole() {
     setIsSubmitting(true);
 
     try {
-      // card6 is hidden from UI because users rarely know it;
-      // backend/model imputes missing or default-compatible values.
       const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: {
@@ -67,9 +65,8 @@ export function PredictionConsole() {
         body: JSON.stringify({
           data: {
             TransactionAmt: parsedAmount,
-            ProductCD: formState.ProductCD,
             card4: formState.card4,
-            card6: "debit or credit",
+            card6: formState.card6,
           },
         }),
       });
@@ -125,23 +122,6 @@ export function PredictionConsole() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
-            <span className="text-sm font-medium text-slate-200">Product Code (ProductCD)</span>
-            <select
-              className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
-              value={formState.ProductCD}
-              onChange={(event) =>
-                setFormState((previous) => ({ ...previous, ProductCD: event.target.value }))
-              }
-            >
-              {PRODUCT_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="grid gap-1.5">
             <span className="text-sm font-medium text-slate-200">Card Network</span>
             <select
               className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
@@ -157,14 +137,30 @@ export function PredictionConsole() {
               ))}
             </select>
           </label>
+
+          <label className="grid gap-1.5">
+            <span className="text-sm font-medium text-slate-200">Card Type</span>
+            <select
+              className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
+              value={formState.card6}
+              onChange={(event) =>
+                setFormState((previous) => ({ ...previous, card6: event.target.value }))
+              }
+            >
+              {CARD_TYPE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
-          <p className="font-medium text-slate-200">Why no card type field?</p>
+          <p className="font-medium text-slate-200">Form fields shown in plain language</p>
           <p className="mt-1">
-            <span className="font-mono text-slate-100">card6</span> (debit/credit class) is often
-            unavailable to end users. The app uses a stable backend-compatible default so form
-            completion stays easy.
+            This form uses only user-friendly inputs: amount, card network, and card type. Internal
+            engineering fields (like ProductCD) are intentionally hidden.
           </p>
         </div>
 
