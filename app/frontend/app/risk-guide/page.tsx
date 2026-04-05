@@ -18,6 +18,14 @@ export default function RiskGuidePage() {
         <p className="mt-2 text-slate-300">
           Use risk bands to convert model output into practical fraud operations decisions.
         </p>
+        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-300">
+          <p className="font-semibold text-slate-100">How to read this page</p>
+          <p className="mt-1">
+            The model returns a probability first. FraudShield then maps that score into a simpler
+            label: Low, Medium, or High Risk. These labels help teams make faster and more
+            consistent decisions.
+          </p>
+        </div>
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">

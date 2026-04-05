@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { CARD_NETWORK_OPTIONS, PRODUCT_OPTIONS } from "../lib/dashboard-data";
+import { CARD_NETWORK_OPTIONS, CARD_TYPE_OPTIONS } from "../lib/dashboard-data";
 
 type PredictionResponse = {
   fraud_probability: number;
@@ -11,14 +11,14 @@ type PredictionResponse = {
 
 type TransactionFormState = {
   TransactionAmt: string;
-  ProductCD: string;
   card4: string;
+  card6: string;
 };
 
 const initialFormState: TransactionFormState = {
   TransactionAmt: "",
-  ProductCD: PRODUCT_OPTIONS[0],
   card4: CARD_NETWORK_OPTIONS[0],
+  card6: CARD_TYPE_OPTIONS[3],
 };
 
 function formatAsPercent(value: number): string {
@@ -57,8 +57,6 @@ export function PredictionConsole() {
     setIsSubmitting(true);
 
     try {
-      // card6 is hidden from UI because users rarely know it;
-      // backend/model imputes missing or default-compatible values.
       const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: {
@@ -67,9 +65,9 @@ export function PredictionConsole() {
         body: JSON.stringify({
           data: {
             TransactionAmt: parsedAmount,
-            ProductCD: formState.ProductCD,
+            // ProductCD is hidden for UX; model pipeline handles missing values.
             card4: formState.card4,
-            card6: "debit or credit",
+            card6: formState.card6,
           },
         }),
       });
@@ -99,7 +97,7 @@ export function PredictionConsole() {
       <h2 className="text-2xl font-semibold text-white">Single Transaction Prediction</h2>
       <p className="mt-2 text-sm text-slate-300">
         Enter known transaction details, submit to the live FastAPI endpoint, and review the model
-        risk output in real time.
+        risk output in real time. This form only asks for fields people generally understand.
       </p>
 
       <form className="mt-6 grid gap-4" onSubmit={handleSubmit}>
@@ -125,23 +123,6 @@ export function PredictionConsole() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
-            <span className="text-sm font-medium text-slate-200">Product Code (ProductCD)</span>
-            <select
-              className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
-              value={formState.ProductCD}
-              onChange={(event) =>
-                setFormState((previous) => ({ ...previous, ProductCD: event.target.value }))
-              }
-            >
-              {PRODUCT_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="grid gap-1.5">
             <span className="text-sm font-medium text-slate-200">Card Network</span>
             <select
               className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
@@ -157,14 +138,31 @@ export function PredictionConsole() {
               ))}
             </select>
           </label>
+
+          <label className="grid gap-1.5">
+            <span className="text-sm font-medium text-slate-200">Card Type (card6)</span>
+            <select
+              className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-slate-100 outline-none transition focus:border-cyan-400 focus:ring-2 focus:ring-cyan-500/30"
+              value={formState.card6}
+              onChange={(event) =>
+                setFormState((previous) => ({ ...previous, card6: event.target.value }))
+              }
+            >
+              {CARD_TYPE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         <div className="rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-300">
-          <p className="font-medium text-slate-200">Why no card type field?</p>
+          <p className="font-medium text-slate-200">What is hidden from users?</p>
           <p className="mt-1">
-            <span className="font-mono text-slate-100">card6</span> (debit/credit class) is often
-            unavailable to end users. The app uses a stable backend-compatible default so form
-            completion stays easy.
+            Product code (<span className="font-mono text-slate-100">ProductCD</span>) is intentionally
+            not requested because most users do not know it. The backend model safely fills unknown
+            values with its trained preprocessing pipeline.
           </p>
         </div>
 
@@ -187,6 +185,10 @@ export function PredictionConsole() {
         <div className="mt-5 rounded-2xl border border-slate-800 bg-slate-950/80 p-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
             Prediction result
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            Probability estimates how likely fraud is. Predicted label is the model decision at its
+            configured threshold. Risk band is an easier action-oriented grouping.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             <article className="rounded-xl border border-slate-800 bg-slate-900 p-4">

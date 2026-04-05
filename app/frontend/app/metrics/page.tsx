@@ -9,6 +9,19 @@ export default function MetricsPage() {
           Comparison of classification quality across baseline and boosted models used in the
           fraud detection pipeline.
         </p>
+        <div className="mt-4 rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-300">
+          <p className="font-semibold text-slate-100">Quick explanation of the metrics</p>
+          <ul className="mt-2 list-disc space-y-1.5 pl-5">
+            <li>
+              <span className="font-medium text-slate-100">ROC AUC:</span> How well the model
+              separates fraud vs non-fraud overall. Closer to 1.0 means better separation.
+            </li>
+            <li>
+              <span className="font-medium text-slate-100">PR AUC:</span> How well the model finds
+              fraud cases when fraud is rare. This is often more practical for fraud projects.
+            </li>
+          </ul>
+        </div>
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-3">
