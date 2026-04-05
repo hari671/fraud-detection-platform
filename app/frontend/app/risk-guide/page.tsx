@@ -46,6 +46,32 @@ export default function RiskGuidePage() {
           </li>
         </ul>
       </section>
+
+      <section className="mt-6 rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
+        <h2 className="text-xl font-semibold text-white">How to use this in real life</h2>
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <article className="rounded-xl border border-slate-800 bg-slate-950 p-4">
+            <p className="text-sm font-semibold text-slate-100">1) Start with probability</p>
+            <p className="mt-2 text-sm text-slate-300">
+              Higher fraud probability means stronger model confidence that the transaction is
+              suspicious.
+            </p>
+          </article>
+          <article className="rounded-xl border border-slate-800 bg-slate-950 p-4">
+            <p className="text-sm font-semibold text-slate-100">2) Check the risk band</p>
+            <p className="mt-2 text-sm text-slate-300">
+              Risk bands simplify raw model scores into low, medium, or high urgency actions.
+            </p>
+          </article>
+          <article className="rounded-xl border border-slate-800 bg-slate-950 p-4">
+            <p className="text-sm font-semibold text-slate-100">3) Apply your policy</p>
+            <p className="mt-2 text-sm text-slate-300">
+              Combine model output with business context, customer history, and compliance rules
+              before final decisioning.
+            </p>
+          </article>
+        </div>
+      </section>
     </div>
   );
 }

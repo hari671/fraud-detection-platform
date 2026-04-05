@@ -43,7 +43,8 @@ export default function RootLayout({
 
               <nav className="flex items-center gap-2 text-sm">
                 {[
-                  { href: "/", label: "Dashboard" },
+                  { href: "/", label: "Home" },
+                  { href: "/dashboard", label: "Dashboard" },
                   { href: "/predict", label: "Predict" },
                   { href: "/metrics", label: "Metrics" },
                   { href: "/risk-guide", label: "Risk Guide" },
