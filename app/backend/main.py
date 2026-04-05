@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -13,6 +14,17 @@ if str(ROOT_DIR) not in sys.path:
 from src.predict_pipeline import predict_fraud
 
 app = FastAPI(title="FraudShield API", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class TransactionInput(BaseModel):
