@@ -1,0 +1,5 @@
+{
+    "final_threshold": 0.8,
+    "low_risk_max": 0.3,
+    "medium_risk_max": 0.7
+}
